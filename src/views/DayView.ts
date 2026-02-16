@@ -13,14 +13,14 @@ export class DayViewModal extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClass('red-times-day-view');
+		contentEl.addClass('time-registrations-day-view');
 
 		// Header with date
 		const header = contentEl.createEl('h2', { text: `Time Registration - ${this.data.date}` });
 		header.style.marginBottom = '1em';
 
 		// Status indicator
-		const statusDiv = contentEl.createDiv({ cls: 'red-times-status' });
+		const statusDiv = contentEl.createDiv({ cls: 'time-registrations-status' });
 		const status = this.data.validation.status;
 		const statusColor = TimeValidator.getStatusColor(status);
 		const statusIcon = TimeValidator.getStatusIcon(status);
@@ -35,7 +35,7 @@ export class DayViewModal extends Modal {
 		statusDiv.style.borderRadius = '4px';
 
 		// Hours summary
-		const summaryDiv = contentEl.createDiv({ cls: 'red-times-summary' });
+		const summaryDiv = contentEl.createDiv({ cls: 'time-registrations-summary' });
 		summaryDiv.style.marginBottom = '1.5em';
 		summaryDiv.innerHTML = `
 			<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em;">
@@ -58,7 +58,7 @@ export class DayViewModal extends Modal {
 
 		// Frontmatter info
 		if (this.data.frontmatter.dayStart || this.data.frontmatter.dayEnd) {
-			const fmDiv = contentEl.createDiv({ cls: 'red-times-frontmatter' });
+			const fmDiv = contentEl.createDiv({ cls: 'time-registrations-frontmatter' });
 			fmDiv.style.marginBottom = '1.5em';
 			fmDiv.style.padding = '0.5em';
 			fmDiv.style.backgroundColor = 'var(--background-secondary)';
@@ -82,7 +82,7 @@ export class DayViewModal extends Modal {
 
 		// Validation issues
 		if (this.data.validation.issues.length > 0) {
-			const issuesDiv = contentEl.createDiv({ cls: 'red-times-issues' });
+			const issuesDiv = contentEl.createDiv({ cls: 'time-registrations-issues' });
 			issuesDiv.style.marginBottom = '1.5em';
 
 			const issuesHeader = issuesDiv.createEl('h3', { text: 'Issues' });
@@ -111,14 +111,14 @@ export class DayViewModal extends Modal {
 		}
 
 		// Time entries table
-		const entriesDiv = contentEl.createDiv({ cls: 'red-times-entries' });
+		const entriesDiv = contentEl.createDiv({ cls: 'time-registrations-entries' });
 		const entriesHeader = entriesDiv.createEl('h3', { text: 'Time Entries' });
 		entriesHeader.style.marginBottom = '0.5em';
 
 		if (this.data.entries.length === 0) {
 			entriesDiv.createEl('p', {
 				text: 'No time entries found',
-				cls: 'red-times-no-entries'
+				cls: 'time-registrations-no-entries'
 			});
 		} else {
 			const table = entriesDiv.createEl('table');
@@ -178,7 +178,7 @@ export class DayViewModal extends Modal {
 		}
 
 		// Footer with actions
-		const footer = contentEl.createDiv({ cls: 'red-times-footer' });
+		const footer = contentEl.createDiv({ cls: 'time-registrations-footer' });
 		footer.style.marginTop = '1.5em';
 		footer.style.display = 'flex';
 		footer.style.justifyContent = 'flex-end';

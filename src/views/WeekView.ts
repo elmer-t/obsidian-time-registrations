@@ -18,7 +18,7 @@ export class WeekViewModal extends Modal {
 	async onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClass('red-times-week-view');
+		contentEl.addClass('time-registrations-week-view');
 
 		// Show loading message
 		contentEl.createEl('p', { text: 'Loading week data...' });
@@ -52,7 +52,7 @@ export class WeekViewModal extends Modal {
 		const expectedHours = this.weekData.reduce((sum, d) => sum + d.expectedHours, 0);
 		const difference = expectedHours - totalHours;
 
-		const summaryDiv = contentEl.createDiv({ cls: 'red-times-summary' });
+		const summaryDiv = contentEl.createDiv({ cls: 'time-registrations-summary' });
 		summaryDiv.style.marginBottom = '1.5em';
 		summaryDiv.style.padding = '1em';
 		summaryDiv.style.backgroundColor = 'var(--background-secondary)';
@@ -77,7 +77,7 @@ export class WeekViewModal extends Modal {
 		`;
 
 		// Week grid
-		const gridDiv = contentEl.createDiv({ cls: 'red-times-week-grid' });
+		const gridDiv = contentEl.createDiv({ cls: 'time-registrations-week-grid' });
 		gridDiv.style.display = 'grid';
 		gridDiv.style.gridTemplateColumns = 'repeat(7, 1fr)';
 		gridDiv.style.gap = '0.5em';
@@ -97,7 +97,7 @@ export class WeekViewModal extends Modal {
 			// Find data for this day
 			const dayData = this.weekData.find(d => d.date === dateStr);
 
-			const dayCard = gridDiv.createDiv({ cls: 'red-times-day-card' });
+			const dayCard = gridDiv.createDiv({ cls: 'time-registrations-day-card' });
 			dayCard.style.padding = '1em';
 			dayCard.style.borderRadius = '4px';
 			dayCard.style.cursor = dayData ? 'pointer' : 'default';
@@ -170,7 +170,7 @@ export class WeekViewModal extends Modal {
 		}
 
 		// Navigation buttons
-		const navDiv = contentEl.createDiv({ cls: 'red-times-navigation' });
+		const navDiv = contentEl.createDiv({ cls: 'time-registrations-navigation' });
 		navDiv.style.display = 'flex';
 		navDiv.style.justifyContent = 'space-between';
 		navDiv.style.marginBottom = '1em';
@@ -198,7 +198,7 @@ export class WeekViewModal extends Modal {
 		});
 
 		// Close button
-		const footer = contentEl.createDiv({ cls: 'red-times-footer' });
+		const footer = contentEl.createDiv({ cls: 'time-registrations-footer' });
 		footer.style.marginTop = '1.5em';
 		footer.style.textAlign = 'right';
 

@@ -77,18 +77,18 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 			.setName('Working days')
 			.setDesc('Select which days of the week you normally work');
 
-		workingDaysSetting.settingEl.addClass('red-times-working-days');
+		workingDaysSetting.settingEl.addClass('time-registrations-working-days');
 
-		const daysContainer = workingDaysSetting.controlEl.createDiv({cls: 'red-times-days-grid'});
+		const daysContainer = workingDaysSetting.controlEl.createDiv({cls: 'time-registrations-days-grid'});
 		const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 		dayNames.forEach((dayName, dayIndex) => {
-			const dayCheckbox = daysContainer.createDiv({cls: 'red-times-day-checkbox'});
+			const dayCheckbox = daysContainer.createDiv({cls: 'time-registrations-day-checkbox'});
 
 			const checkbox = dayCheckbox.createEl('input', {
 				type: 'checkbox',
 				attr: {
-					id: `red-times-day-${dayIndex}`
+					id: `time-registrations-day-${dayIndex}`
 				}
 			});
 			checkbox.checked = this.plugin.settings.workingDays.includes(dayIndex);
@@ -96,7 +96,7 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 			dayCheckbox.createEl('label', {
 				text: dayName,
 				attr: {
-					for: `red-times-day-${dayIndex}`
+					for: `time-registrations-day-${dayIndex}`
 				}
 			});
 

@@ -1,86 +1,86 @@
-/* RED Times Plugin Styles */
+/* Time Registrations Plugin Styles */
 
-.red-times-day-view,
-.red-times-week-view,
-.red-times-month-view {
+.time-registrations-day-view,
+.time-registrations-week-view,
+.time-registrations-month-view {
   padding: 1em;
   max-width: 100%;
 }
 
 /* Status indicator */
-.red-times-status {
+.time-registrations-status {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 /* Summary boxes */
-.red-times-summary {
+.time-registrations-summary {
   background-color: var(--background-secondary);
   border-radius: var(--radius-m);
   padding: 1em;
 }
 
 /* Week grid cards */
-.red-times-day-card {
+.time-registrations-day-card {
   position: relative;
 }
 
-.red-times-day-card:hover {
+.time-registrations-day-card:hover {
   cursor: pointer;
 }
 
 /* Month calendar */
-.red-times-calendar {
+.time-registrations-calendar {
   width: 100%;
 }
 
-.red-times-day-cell {
+.time-registrations-day-cell {
   position: relative;
   display: flex;
   flex-direction: column;
 }
 
 /* Tables */
-.red-times-entries table {
+.time-registrations-entries table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 0.5em;
 }
 
-.red-times-entries table th,
-.red-times-entries table td {
+.time-registrations-entries table th,
+.time-registrations-entries table td {
   text-align: left;
   padding: 0.5em;
 }
 
-.red-times-entries table th {
+.time-registrations-entries table th {
   font-weight: bold;
   border-bottom: 2px solid var(--background-modifier-border);
   color: var(--text-muted);
 }
 
-.red-times-entries table tr {
+.time-registrations-entries table tr {
   border-bottom: 1px solid var(--background-modifier-border);
 }
 
-.red-times-entries table tr:hover {
+.time-registrations-entries table tr:hover {
   background-color: var(--background-modifier-hover);
 }
 
 /* Issues list */
-.red-times-issues ul {
+.time-registrations-issues ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.red-times-issues li {
+.time-registrations-issues li {
   margin-bottom: 0.5em;
 }
 
 /* Navigation */
-.red-times-navigation {
+.time-registrations-navigation {
   display: flex;
   justify-content: space-between;
   gap: 0.5em;
@@ -88,7 +88,7 @@
 }
 
 /* Footer */
-.red-times-footer {
+.time-registrations-footer {
   display: flex;
   justify-content: flex-end;
   gap: 0.5em;
@@ -96,8 +96,8 @@
 }
 
 /* Buttons */
-.red-times-footer button,
-.red-times-navigation button {
+.time-registrations-footer button,
+.time-registrations-navigation button {
   padding: 0.5em 1em;
   border-radius: var(--radius-s);
   border: 1px solid var(--background-modifier-border);
@@ -107,40 +107,40 @@
   transition: background-color 0.2s;
 }
 
-.red-times-footer button:hover,
-.red-times-navigation button:hover {
+.time-registrations-footer button:hover,
+.time-registrations-navigation button:hover {
   background-color: var(--interactive-hover);
 }
 
-.red-times-footer button:active,
-.red-times-navigation button:active {
+.time-registrations-footer button:active,
+.time-registrations-navigation button:active {
   background-color: var(--interactive-active);
 }
 
 /* Modal sizing - target modals containing our views */
-.modal:has(.red-times-day-view),
-.modal:has(.red-times-week-view),
-.modal:has(.red-times-month-view) {
+.modal:has(.time-registrations-day-view),
+.modal:has(.time-registrations-week-view),
+.modal:has(.time-registrations-month-view) {
   width: 85vw !important;
   max-width: 1800px !important;
   max-height: 90vh !important;
 }
 
 /* Ensure modal content takes full width */
-.modal:has(.red-times-day-view) .modal-content,
-.modal:has(.red-times-week-view) .modal-content,
-.modal:has(.red-times-month-view) .modal-content {
+.modal:has(.time-registrations-day-view) .modal-content,
+.modal:has(.time-registrations-week-view) .modal-content,
+.modal:has(.time-registrations-month-view) .modal-content {
   width: 100%;
   max-width: none;
   padding: 1em;
 }
 
 /* Settings - Working Days Grid */
-.red-times-working-days .setting-item-control {
+.time-registrations-working-days .setting-item-control {
   width: 100%;
 }
 
-.red-times-days-grid {
+.time-registrations-days-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 0.5em;
@@ -148,7 +148,7 @@
   margin-top: 0.5em;
 }
 
-.red-times-day-checkbox {
+.time-registrations-day-checkbox {
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -158,16 +158,16 @@
   transition: background-color 0.2s;
 }
 
-.red-times-day-checkbox:hover {
+.time-registrations-day-checkbox:hover {
   background-color: var(--background-modifier-hover);
 }
 
-.red-times-day-checkbox input[type="checkbox"] {
+.time-registrations-day-checkbox input[type="checkbox"] {
   margin: 0;
   cursor: pointer;
 }
 
-.red-times-day-checkbox label {
+.time-registrations-day-checkbox label {
   margin: 0;
   cursor: pointer;
   user-select: none;
@@ -176,23 +176,23 @@
 
 /* Responsive design for mobile */
 @media (max-width: 768px) {
-  .red-times-summary > div {
+  .time-registrations-summary > div {
     grid-template-columns: 1fr !important;
   }
 
-  .red-times-week-grid {
+  .time-registrations-week-grid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 
-  .red-times-calendar {
+  .time-registrations-calendar {
     font-size: 0.8em;
   }
 
-  .red-times-day-cell {
+  .time-registrations-day-cell {
     min-height: 60px !important;
   }
 
-  .red-times-days-grid {
+  .time-registrations-days-grid {
     grid-template-columns: 1fr;
   }
 }

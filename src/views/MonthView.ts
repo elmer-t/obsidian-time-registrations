@@ -19,7 +19,7 @@ export class MonthViewModal extends Modal {
 	async onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClass('red-times-month-view');
+		contentEl.addClass('time-registrations-month-view');
 
 		// Show loading message
 		contentEl.createEl('p', { text: 'Loading month data...' });
@@ -52,7 +52,7 @@ export class MonthViewModal extends Modal {
 		const workingDays = this.monthData.filter(d => d.expectedHours > 0).length;
 		const difference = expectedHours - totalHours;
 
-		const summaryDiv = contentEl.createDiv({ cls: 'red-times-summary' });
+		const summaryDiv = contentEl.createDiv({ cls: 'time-registrations-summary' });
 		summaryDiv.style.marginBottom = '1.5em';
 		summaryDiv.style.padding = '1em';
 		summaryDiv.style.backgroundColor = 'var(--background-secondary)';
@@ -81,7 +81,7 @@ export class MonthViewModal extends Modal {
 		`;
 
 		// Calendar grid
-		const calendarDiv = contentEl.createDiv({ cls: 'red-times-calendar' });
+		const calendarDiv = contentEl.createDiv({ cls: 'time-registrations-calendar' });
 		calendarDiv.style.marginBottom = '1.5em';
 
 		// Day headers
@@ -128,7 +128,7 @@ export class MonthViewModal extends Modal {
 			const dayOfWeek = date.getDay();
 			const isWorkingDay = this.dataManager['settings'].workingDays.includes(dayOfWeek);
 
-			const dayCell = gridDiv.createDiv({ cls: 'red-times-day-cell' });
+			const dayCell = gridDiv.createDiv({ cls: 'time-registrations-day-cell' });
 			dayCell.style.padding = '0.5em';
 			dayCell.style.borderRadius = '4px';
 			dayCell.style.minHeight = '80px';
@@ -206,7 +206,7 @@ export class MonthViewModal extends Modal {
 		}
 
 		// Navigation buttons
-		const navDiv = contentEl.createDiv({ cls: 'red-times-navigation' });
+		const navDiv = contentEl.createDiv({ cls: 'time-registrations-navigation' });
 		navDiv.style.display = 'flex';
 		navDiv.style.justifyContent = 'space-between';
 		navDiv.style.marginBottom = '1em';
@@ -240,7 +240,7 @@ export class MonthViewModal extends Modal {
 		});
 
 		// Close button
-		const footer = contentEl.createDiv({ cls: 'red-times-footer' });
+		const footer = contentEl.createDiv({ cls: 'time-registrations-footer' });
 		footer.style.marginTop = '1.5em';
 		footer.style.textAlign = 'right';
 
