@@ -34,6 +34,7 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 
 		containerEl.createEl('h2', {text: 'Time Registrations Settings'});
 
+
 		// Daily notes folder with search component
 		new Setting(containerEl)
 			.setName('Daily notes folder')
@@ -137,5 +138,15 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}));
 
-	}
-}
+				
+				containerEl.createEl('p', {text: 'For help, visit the '}).appendChild(
+					createEl('a', {
+						text: 'GitHub page',
+						attr: {
+							href: 'https://github.com/elmer-t/obsidian-time-registrations',
+							target: '_blank'
+						}
+					})
+				);
+			}
+		}
