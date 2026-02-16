@@ -1,99 +1,192 @@
-import {App, Editor, MarkdownView, Modal, Notice, Plugin} from 'obsidian';
-import {DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab} from "./settings";
+import { Notice, Plugin } from 'obsidian';
+import { DEFAULT_SETTINGS, TimeRegistrationsSettings as TimeRegistrationsSettings, TimeRegistrationsSettingTab } from './settings';
+import { TimeDataManager } from './dataManager';
+import { TimeParser } from './parser';
+import { DayViewModal } from './views/DayView';
+import { WeekViewModal } from './views/WeekView';
+import { MonthViewModal } from './views/MonthView';
+import { TimeValidator } from './validator';
 
-// Remember to rename these classes and interfaces!
-
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class TimeRegistrations extends Plugin {
+	settings: TimeRegistrationsSettings;
+	dataManager: TimeDataManager;
+	statusBarItem: HTMLElement;
 
 	async onload() {
 		await this.loadSettings();
 
-		// This creates an icon in the left ribbon.
-		this.addRibbonIcon('dice', 'Sample', (evt: MouseEvent) => {
-			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
+		// Initialize data manager
+		this.dataManager = new TimeDataManager(this.app, this.settings);
+
+		// Add ribbon icon to open week view
+		this.addRibbonIcon('clock', 'RED Times - Week Overview', () => {
+			new WeekViewModal(this.app, this.dataManager, new Date()).open();
 		});
 
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		const statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText('Status bar text');
+		// Add status bar item
+		this.statusBarItem = this.addStatusBarItem();
+		this.updateStatusBar();
 
-		// This adds a simple command that can be triggered anywhere
+		// Command: Show today's overview
 		this.addCommand({
-			id: 'open-modal-simple',
-			name: 'Open modal (simple)',
-			callback: () => {
-				new SampleModal(this.app).open();
+			id: 'show-today',
+			name: 'Show today\'s time registration',
+			callback: async () => {
+				const today = this.formatDate(new Date());
+				const data = await this.dataManager.getDailyData(today);
+
+				if (data) {
+					new DayViewModal(this.app, data).open();
+				} else {
+					new Notice('No time registration found for today');
+				}
 			}
 		});
-		// This adds an editor command that can perform some operation on the current editor instance
+
+		// Command: Show current note's time registration
 		this.addCommand({
-			id: 'replace-selected',
-			name: 'Replace selected content',
-			editorCallback: (editor: Editor, view: MarkdownView) => {
-				editor.replaceSelection('Sample editor command');
-			}
-		});
-		// This adds a complex command that can check whether the current state of the app allows execution of the command
-		this.addCommand({
-			id: 'open-modal-complex',
-			name: 'Open modal (complex)',
+			id: 'show-current-note',
+			name: 'Show current note\'s time registration',
 			checkCallback: (checking: boolean) => {
-				// Conditions to check
-				const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-				if (markdownView) {
-					// If checking is true, we're simply "checking" if the command can be run.
-					// If checking is false, then we want to actually perform the operation.
-					if (!checking) {
-						new SampleModal(this.app).open();
+				const activeFile = this.app.workspace.getActiveFile();
+				if (activeFile) {
+					const date = TimeParser.extractDateFromFilename(activeFile);
+					if (date) {
+						if (!checking) {
+							this.dataManager.getDailyData(date).then(data => {
+								if (data) {
+									new DayViewModal(this.app, data).open();
+								} else {
+									new Notice('No time entries found in this note');
+								}
+							});
+						}
+						return true;
 					}
-
-					// This command will only show up in Command Palette when the check function returns true
-					return true;
 				}
 				return false;
 			}
 		});
 
-		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
-
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			new Notice("Click");
+		// Command: Show week overview
+		this.addCommand({
+			id: 'show-week',
+			name: 'Show week overview',
+			callback: () => {
+				new WeekViewModal(this.app, this.dataManager, new Date()).open();
+			}
 		});
 
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+		// Command: Show month overview
+		this.addCommand({
+			id: 'show-month',
+			name: 'Show month overview',
+			callback: () => {
+				const now = new Date();
+				new MonthViewModal(this.app, this.dataManager, now.getFullYear(), now.getMonth()).open();
+			}
+		});
 
+		// Command: Validate current note
+		this.addCommand({
+			id: 'validate-current',
+			name: 'Validate current note',
+			checkCallback: (checking: boolean) => {
+				const activeFile = this.app.workspace.getActiveFile();
+				if (activeFile) {
+					const date = TimeParser.extractDateFromFilename(activeFile);
+					if (date) {
+						if (!checking) {
+							this.validateNote(date);
+						}
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+
+		// Settings tab
+		this.addSettingTab(new TimeRegistrationsSettingTab(this.app, this));
+
+		// Update status bar periodically
+		this.registerInterval(
+			window.setInterval(() => this.updateStatusBar(), 60000) // Every minute
+		);
+
+		// Update status bar when file is opened
+		this.registerEvent(
+			this.app.workspace.on('active-leaf-change', () => {
+				this.updateStatusBar();
+			})
+		);
 	}
 
 	onunload() {
+		// Cleanup if needed
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<MyPluginSettings>);
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<TimeRegistrationsSettings>);
 	}
 
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-}
-
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
+		// Reinitialize data manager with new settings
+		this.dataManager = new TimeDataManager(this.app, this.settings);
 	}
 
-	onOpen() {
-		let {contentEl} = this;
-		contentEl.setText('Woah!');
+	private async updateStatusBar() {
+		const today = this.formatDate(new Date());
+		const data = await this.dataManager.getDailyData(today);
+
+		if (data) {
+			const status = data.validation.status;
+			const icon = TimeValidator.getStatusIcon(status);
+			const hours = data.totalHours.toFixed(2);
+			const expected = data.expectedHours.toFixed(2);
+
+			this.statusBarItem.setText(`${icon} ${hours}h / ${expected}h`);
+			this.statusBarItem.title = `RED Times: ${TimeValidator.getStatusText(status)}`;
+		} else {
+			this.statusBarItem.setText('⏱️ 0h');
+			this.statusBarItem.title = 'RED Times: No data today';
+		}
 	}
 
-	onClose() {
-		const {contentEl} = this;
-		contentEl.empty();
+	private async validateNote(date: string) {
+		const data = await this.dataManager.getDailyData(date);
+
+		if (!data) {
+			new Notice('No time entries found in this note');
+			return;
+		}
+
+		const validation = data.validation;
+		const status = TimeValidator.getStatusText(validation.status);
+		const icon = TimeValidator.getStatusIcon(validation.status);
+
+		let message = `${icon} ${status}\n\n`;
+		message += `Total: ${data.totalHours.toFixed(2)}h / ${data.expectedHours}h\n`;
+
+		if (validation.issues.length > 0) {
+			message += `\nIssues (${validation.issues.length}):\n`;
+			validation.issues.slice(0, 5).forEach(issue => {
+				const issueIcon = issue.type === 'error' ? '❌' : issue.type === 'warning' ? '⚠️' : 'ℹ️';
+				message += `${issueIcon} ${issue.message}\n`;
+			});
+			if (validation.issues.length > 5) {
+				message += `... and ${validation.issues.length - 5} more`;
+			}
+		}
+
+		new Notice(message, 8000);
+	}
+
+	private formatDate(date: Date): string {
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+		return `${year}-${month}-${day}`;
 	}
 }

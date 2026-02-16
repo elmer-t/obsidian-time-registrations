@@ -1,8 +1,198 @@
-/*
+/* RED Times Plugin Styles */
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.red-times-day-view,
+.red-times-week-view,
+.red-times-month-view {
+  padding: 1em;
+  max-width: 100%;
+}
 
-If your plugin does not need CSS, delete this file.
+/* Status indicator */
+.red-times-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-*/
+/* Summary boxes */
+.red-times-summary {
+  background-color: var(--background-secondary);
+  border-radius: var(--radius-m);
+  padding: 1em;
+}
+
+/* Week grid cards */
+.red-times-day-card {
+  position: relative;
+}
+
+.red-times-day-card:hover {
+  cursor: pointer;
+}
+
+/* Month calendar */
+.red-times-calendar {
+  width: 100%;
+}
+
+.red-times-day-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tables */
+.red-times-entries table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5em;
+}
+
+.red-times-entries table th,
+.red-times-entries table td {
+  text-align: left;
+  padding: 0.5em;
+}
+
+.red-times-entries table th {
+  font-weight: bold;
+  border-bottom: 2px solid var(--background-modifier-border);
+  color: var(--text-muted);
+}
+
+.red-times-entries table tr {
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.red-times-entries table tr:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+/* Issues list */
+.red-times-issues ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.red-times-issues li {
+  margin-bottom: 0.5em;
+}
+
+/* Navigation */
+.red-times-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5em;
+  margin: 1em 0;
+}
+
+/* Footer */
+.red-times-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5em;
+  margin-top: 1.5em;
+}
+
+/* Buttons */
+.red-times-footer button,
+.red-times-navigation button {
+  padding: 0.5em 1em;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--background-modifier-border);
+  background-color: var(--interactive-normal);
+  color: var(--text-normal);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.red-times-footer button:hover,
+.red-times-navigation button:hover {
+  background-color: var(--interactive-hover);
+}
+
+.red-times-footer button:active,
+.red-times-navigation button:active {
+  background-color: var(--interactive-active);
+}
+
+/* Modal sizing - target modals containing our views */
+.modal:has(.red-times-day-view),
+.modal:has(.red-times-week-view),
+.modal:has(.red-times-month-view) {
+  width: 85vw !important;
+  max-width: 1800px !important;
+  max-height: 90vh !important;
+}
+
+/* Ensure modal content takes full width */
+.modal:has(.red-times-day-view) .modal-content,
+.modal:has(.red-times-week-view) .modal-content,
+.modal:has(.red-times-month-view) .modal-content {
+  width: 100%;
+  max-width: none;
+  padding: 1em;
+}
+
+/* Settings - Working Days Grid */
+.red-times-working-days .setting-item-control {
+  width: 100%;
+}
+
+.red-times-days-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.5em;
+  width: 100%;
+  margin-top: 0.5em;
+}
+
+.red-times-day-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em;
+  border-radius: var(--radius-s);
+  background-color: var(--background-secondary);
+  transition: background-color 0.2s;
+}
+
+.red-times-day-checkbox:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.red-times-day-checkbox input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.red-times-day-checkbox label {
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .red-times-summary > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  .red-times-week-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .red-times-calendar {
+    font-size: 0.8em;
+  }
+
+  .red-times-day-cell {
+    min-height: 60px !important;
+  }
+
+  .red-times-days-grid {
+    grid-template-columns: 1fr;
+  }
+}
