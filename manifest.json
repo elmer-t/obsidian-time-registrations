@@ -1,7 +1,7 @@
 {
 	"id": "time-registrations",
 	"name": "Time Registrations",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"minAppVersion": "0.15.0",
 	"description": "Time registration plugin.",
 	"author": "REDHEADIT",
