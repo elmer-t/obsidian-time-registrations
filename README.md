@@ -21,11 +21,13 @@ A simple time registration and tracking plugin for Obsidian that helps you manag
 - **Week View**: 7-day grid showing status for each day with color coding
 - **Month View**: Full calendar view with daily summaries
 - **Status Bar**: Live indicator showing today's registration status
+- **Non-working Days**: Automatically dimmed based on your working days settings
 
 ### 🎨 Color-Coded Status System
-- 🟢 **Green (Complete)**: All hours registered correctly
-- 🟡 **Yellow (Warning)**: Partial hours or minor issues
-- 🔴 **Red (Error)**: Missing data or major issues
+- 🟢 **Green (Complete)**: All hours registered correctly, all entries valid
+- 🔵 **Blue (Incomplete)**: Hours don't match expected (missing or excess hours)
+- 🟡 **Yellow (Warning)**: Minor issues (missing project links, descriptions in strict mode)
+- 🔴 **Red (Error)**: Actual errors (missing client, missing hours on entries)
 - ⚪ **Gray (No Data)**: No entries found
 
 ## Usage
@@ -103,11 +105,7 @@ Enable strict validation to get warnings about:
 - Empty descriptions
 - Missing frontmatter fields
 
-### Warn on Excess Hours
-Show warnings when registered hours exceed expected hours.
-- Default: `Off`
-- When disabled, you won't see warnings for working overtime (only for missing hours)
-- Useful if you often work more than expected hours and don't need those warnings
+**Note**: Excess hours (working more than expected) are never treated as a problem or warning.
 
 ## Installation
 

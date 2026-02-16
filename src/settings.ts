@@ -7,7 +7,6 @@ export interface TimeRegistrationsSettings {
 	workingDays: number[]; // 0 = Sunday, 1 = Monday, etc.
 	dateFormat: string;
 	strictValidation: boolean;
-	warnOnExcessHours: boolean;
 }
 
 export const DEFAULT_SETTINGS: TimeRegistrationsSettings = {
@@ -15,8 +14,7 @@ export const DEFAULT_SETTINGS: TimeRegistrationsSettings = {
 	expectedHoursPerDay: 8,
 	workingDays: [1, 2, 3, 4, 5], // Monday to Friday
 	dateFormat: 'YYYY-MM-DD',
-	strictValidation: false,
-	warnOnExcessHours: false
+	strictValidation: false
 }
 
 export class TimeRegistrationsSettingTab extends PluginSettingTab {
@@ -52,7 +50,7 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Expected hours per day')
-			.setDesc('Number of hours you expect to work per day')
+			.setDesc('Minimum number of hours you expect to work per day')
 			.addText(text => text
 				.setPlaceholder('8')
 				.setValue(String(this.plugin.settings.expectedHoursPerDay))
@@ -62,16 +60,6 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 						this.plugin.settings.expectedHoursPerDay = num;
 						await this.plugin.saveSettings();
 					}
-				}));
-
-		new Setting(containerEl)
-			.setName('Warn on excess hours')
-			.setDesc('Show warnings when registered hours exceed expected hours')
-			.addToggle(toggle => toggle
-				.setValue(this.plugin.settings.warnOnExcessHours)
-				.onChange(async (value) => {
-					this.plugin.settings.warnOnExcessHours = value;
-					await this.plugin.saveSettings();
 				}));
 
 		new Setting(containerEl)

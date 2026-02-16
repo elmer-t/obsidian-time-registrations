@@ -97,8 +97,7 @@ export class TimeDataManager {
 			entries,
 			frontmatter,
 			expectedHours,
-			this.settings.strictValidation,
-			this.settings.warnOnExcessHours
+			this.settings.strictValidation
 		);
 
 		return {

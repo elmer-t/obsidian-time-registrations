@@ -27,9 +27,10 @@ export interface DailyTimeData {
 }
 
 export enum ValidationStatus {
-	COMPLETE = 'complete', // All good
-	WARNING = 'warning', // Partial data or minor issues
-	ERROR = 'error', // Missing data or major issues
+	COMPLETE = 'complete', // All good - hours match expected, all entries valid
+	INCOMPLETE = 'incomplete', // Hours don't match expected (missing or excess)
+	WARNING = 'warning', // Minor issues (missing project links, descriptions in strict mode)
+	ERROR = 'error', // Actual errors (missing client, missing hours on entries)
 	NO_DATA = 'no-data' // No entries found
 }
 

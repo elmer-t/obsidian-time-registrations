@@ -9,8 +9,7 @@ export class TimeValidator {
 		entries: TimeEntry[],
 		frontmatter: DailyFrontmatter,
 		expectedHours: number,
-		strictValidation: boolean,
-		warnOnExcessHours: boolean = false
+		strictValidation: boolean
 	): ValidationResult {
 		const issues: ValidationIssue[] = [];
 
@@ -79,26 +78,18 @@ export class TimeValidator {
 			}
 		});
 
-		// Check if hours match expected
+		// Check if hours are less than expected
 		const missingHours = expectedFromFrontmatter - totalHours;
-		const hoursDifference = Math.abs(missingHours);
+		const hoursIncomplete = missingHours > 0.1; // Only incomplete if MISSING hours (allow small rounding errors)
 
-		if (hoursDifference > 0.1) { // Allow small rounding errors
-			if (missingHours > 0) {
-				// Missing hours - always warn
-				const issueType = hoursDifference >= 1 ? 'error' : 'warning';
-				issues.push({
-					type: issueType,
-					message: `Missing ${missingHours.toFixed(2)} hours (expected ${expectedFromFrontmatter}h, got ${totalHours}h)`
-				});
-			} else if (warnOnExcessHours) {
-				// Excess hours - only warn if setting is enabled
-				issues.push({
-					type: 'warning',
-					message: `Excess ${Math.abs(missingHours).toFixed(2)} hours (expected ${expectedFromFrontmatter}h, got ${totalHours}h)`
-				});
-			}
+		if (hoursIncomplete) {
+			// Missing hours - add info message
+			issues.push({
+				type: 'info',
+				message: `Missing ${missingHours.toFixed(2)} hours (expected ${expectedFromFrontmatter}h, got ${totalHours}h)`
+			});
 		}
+		// Note: Excess hours are never a problem and don't affect status
 
 		// Check for missing frontmatter in strict mode
 		if (strictValidation) {
@@ -116,8 +107,13 @@ export class TimeValidator {
 		const hasWarnings = issues.some(i => i.type === 'warning');
 
 		if (hasErrors) {
+			// Actual errors - missing client, missing hours on entries
 			status = ValidationStatus.ERROR;
-		} else if (hasWarnings || hoursDifference > 0.1) {
+		} else if (hoursIncomplete) {
+			// Hours don't match expected
+			status = ValidationStatus.INCOMPLETE;
+		} else if (hasWarnings) {
+			// Minor issues in strict mode
 			status = ValidationStatus.WARNING;
 		}
 
@@ -137,6 +133,8 @@ export class TimeValidator {
 		switch (status) {
 			case ValidationStatus.COMPLETE:
 				return '#4caf50'; // Green
+			case ValidationStatus.INCOMPLETE:
+				return '#2196f3'; // Blue
 			case ValidationStatus.WARNING:
 				return '#ff9800'; // Orange/Yellow
 			case ValidationStatus.ERROR:
@@ -155,6 +153,8 @@ export class TimeValidator {
 		switch (status) {
 			case ValidationStatus.COMPLETE:
 				return '✓';
+			case ValidationStatus.INCOMPLETE:
+				return '◐';
 			case ValidationStatus.WARNING:
 				return '⚠';
 			case ValidationStatus.ERROR:
@@ -173,6 +173,8 @@ export class TimeValidator {
 		switch (status) {
 			case ValidationStatus.COMPLETE:
 				return 'Complete';
+			case ValidationStatus.INCOMPLETE:
+				return 'Incomplete';
 			case ValidationStatus.WARNING:
 				return 'Warning';
 			case ValidationStatus.ERROR:

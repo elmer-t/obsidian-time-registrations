@@ -137,8 +137,22 @@ export default class TimeRegistrations extends Plugin {
 	}
 
 	private async updateStatusBar() {
-		const today = this.formatDate(new Date());
-		const data = await this.dataManager.getDailyData(today);
+		let date: string | null = null;
+
+		// If the active file is a time registration note, show its status instead of today's status
+		const activeFile = this.app.workspace.getActiveFile();
+		if (activeFile) {
+			date = TimeParser.extractDateFromFilename(activeFile);
+			if (!date) {
+				date = this.formatDate(new Date());
+			}
+		}
+
+		if (!date) {
+			date = this.formatDate(new Date());
+		}
+
+		const data = await this.dataManager.getDailyData(date);
 
 		if (data) {
 			const status = data.validation.status;
@@ -146,11 +160,11 @@ export default class TimeRegistrations extends Plugin {
 			const hours = data.totalHours.toFixed(2);
 			const expected = data.expectedHours.toFixed(2);
 
-			this.statusBarItem.setText(`${icon} ${hours}h / ${expected}h`);
-			this.statusBarItem.title = `RED Times: ${TimeValidator.getStatusText(status)}`;
+			this.statusBarItem.setText(`${icon} ${hours}h`);
+			this.statusBarItem.title = `Time registrations for ${date}: ${TimeValidator.getStatusText(status)}`;
 		} else {
 			this.statusBarItem.setText('⏱️ 0h');
-			this.statusBarItem.title = 'RED Times: No data today';
+			this.statusBarItem.title = `Time registrations for ${date}: No data`;
 		}
 	}
 
