@@ -89,6 +89,10 @@ export class WeekViewModal extends Modal {
 			const date = new Date(monday);
 			date.setDate(monday.getDate() + i);
 			const dateStr = this.formatDate(date);
+			const dayOfWeek = date.getDay();
+
+			// Check if this is a working day
+			const isWorkingDay = this.dataManager['settings'].workingDays.includes(dayOfWeek);
 
 			// Find data for this day
 			const dayData = this.weekData.find(d => d.date === dateStr);
@@ -98,6 +102,12 @@ export class WeekViewModal extends Modal {
 			dayCard.style.borderRadius = '4px';
 			dayCard.style.cursor = dayData ? 'pointer' : 'default';
 			dayCard.style.transition = 'transform 0.2s';
+
+			// Apply dimmed style for non-working days
+			if (!isWorkingDay) {
+				dayCard.style.opacity = '0.5';
+				dayCard.style.filter = 'grayscale(0.3)';
+			}
 
 			// Status color
 			const status = dayData?.validation.status || ValidationStatus.NO_DATA;

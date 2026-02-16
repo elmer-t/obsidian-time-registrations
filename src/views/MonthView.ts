@@ -123,12 +123,23 @@ export class MonthViewModal extends Modal {
 			const dateStr = `${this.year}-${String(this.month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 			const dayData = this.monthData.find(d => d.date === dateStr);
 
+			// Check if this is a working day
+			const date = new Date(this.year, this.month, day);
+			const dayOfWeek = date.getDay();
+			const isWorkingDay = this.dataManager['settings'].workingDays.includes(dayOfWeek);
+
 			const dayCell = gridDiv.createDiv({ cls: 'red-times-day-cell' });
 			dayCell.style.padding = '0.5em';
 			dayCell.style.borderRadius = '4px';
 			dayCell.style.minHeight = '80px';
 			dayCell.style.cursor = dayData ? 'pointer' : 'default';
 			dayCell.style.transition = 'transform 0.2s';
+
+			// Apply dimmed style for non-working days
+			if (!isWorkingDay) {
+				dayCell.style.opacity = '0.5';
+				dayCell.style.filter = 'grayscale(0.3)';
+			}
 
 			// Status color
 			const status = dayData?.validation.status || ValidationStatus.NO_DATA;
