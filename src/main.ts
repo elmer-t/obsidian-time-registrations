@@ -19,7 +19,7 @@ export default class TimeRegistrations extends Plugin {
 		this.dataManager = new TimeDataManager(this.app, this.settings);
 
 		// Add ribbon icon to open week view
-		this.addRibbonIcon('clock', 'RED Times - Week Overview', () => {
+		this.addRibbonIcon('clock', 'Time Registrations - Week Overview', () => {
 			new WeekViewModal(this.app, this.dataManager, new Date()).open();
 		});
 
