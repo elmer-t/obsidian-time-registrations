@@ -16,8 +16,7 @@ export class DayViewModal extends Modal {
 		contentEl.addClass('time-registrations-day-view');
 
 		// Header with date
-		const header = contentEl.createEl('h2', { text: `Time Registration - ${this.data.date}` });
-		header.style.marginBottom = '1em';
+		contentEl.createEl('h2', { text: `Time registration - ${this.data.date}` });
 
 		// Status indicator
 		const statusDiv = contentEl.createDiv({ cls: 'time-registrations-status' });
@@ -25,95 +24,65 @@ export class DayViewModal extends Modal {
 		const statusColor = TimeValidator.getStatusColor(status);
 		const statusIcon = TimeValidator.getStatusIcon(status);
 
-		statusDiv.innerHTML = `
-			<span style="color: ${statusColor}; font-size: 1.5em; margin-right: 0.5em;">${statusIcon}</span>
-			<span style="font-weight: bold;">${TimeValidator.getStatusText(status)}</span>
-		`;
-		statusDiv.style.marginBottom = '1em';
-		statusDiv.style.padding = '0.5em';
-		statusDiv.style.backgroundColor = 'var(--background-secondary)';
-		statusDiv.style.borderRadius = '4px';
+		const iconSpan = statusDiv.createSpan({ cls: 'time-registrations-status-icon', text: statusIcon });
+		iconSpan.style.setProperty('--icon-color', statusColor);
+		statusDiv.createSpan({ cls: 'time-registrations-status-text', text: TimeValidator.getStatusText(status) });
 
 		// Hours summary
 		const summaryDiv = contentEl.createDiv({ cls: 'time-registrations-summary' });
-		summaryDiv.style.marginBottom = '1.5em';
-		summaryDiv.innerHTML = `
-			<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em;">
-				<div>
-					<div style="color: var(--text-muted); font-size: 0.9em;">Total Hours</div>
-					<div style="font-size: 1.5em; font-weight: bold;">${this.data.totalHours.toFixed(2)}h</div>
-				</div>
-				<div>
-					<div style="color: var(--text-muted); font-size: 0.9em;">Expected Hours</div>
-					<div style="font-size: 1.5em; font-weight: bold;">${this.data.expectedHours.toFixed(2)}h</div>
-				</div>
-				<div>
-					<div style="color: var(--text-muted); font-size: 0.9em;">Difference</div>
-					<div style="font-size: 1.5em; font-weight: bold; color: ${this.data.validation.missingHours > 0 ? '#f44336' : '#4caf50'}">
-						${this.data.validation.missingHours > 0 ? '-' : '+'}${Math.abs(this.data.validation.missingHours).toFixed(2)}h
-					</div>
-				</div>
-			</div>
-		`;
+		const summaryGrid = summaryDiv.createDiv({ cls: 'time-registrations-summary-grid' });
+
+		this.createSummaryItem(summaryGrid, 'Total hours', `${this.data.totalHours.toFixed(2)}h`);
+		this.createSummaryItem(summaryGrid, 'Expected hours', `${this.data.expectedHours.toFixed(2)}h`);
+
+		const diffText = `${this.data.validation.missingHours > 0 ? '-' : '+'}${Math.abs(this.data.validation.missingHours).toFixed(2)}h`;
+		const diffValue = this.createSummaryItem(summaryGrid, 'Difference', diffText);
+		diffValue.addClass(this.data.validation.missingHours > 0 ? 'time-registrations-value-negative' : 'time-registrations-value-positive');
 
 		// Frontmatter info
 		if (this.data.frontmatter.dayStart || this.data.frontmatter.dayEnd) {
 			const fmDiv = contentEl.createDiv({ cls: 'time-registrations-frontmatter' });
-			fmDiv.style.marginBottom = '1.5em';
-			fmDiv.style.padding = '0.5em';
-			fmDiv.style.backgroundColor = 'var(--background-secondary)';
-			fmDiv.style.borderRadius = '4px';
-
-			let fmContent = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5em;">';
+			const fmGrid = fmDiv.createDiv({ cls: 'time-registrations-frontmatter-grid' });
 
 			if (this.data.frontmatter.dayStart && this.data.frontmatter.dayEnd) {
-				fmContent += `<div><strong>Day:</strong> ${this.data.frontmatter.dayStart} - ${this.data.frontmatter.dayEnd}</div>`;
+				const item = fmGrid.createDiv();
+				item.createEl('strong', { text: 'Day: ' });
+				item.appendText(`${this.data.frontmatter.dayStart} - ${this.data.frontmatter.dayEnd}`);
 			}
 			if (this.data.frontmatter.location) {
-				fmContent += `<div><strong>Location:</strong> ${this.data.frontmatter.location}</div>`;
+				const item = fmGrid.createDiv();
+				item.createEl('strong', { text: 'Location: ' });
+				item.appendText(this.data.frontmatter.location);
 			}
 			if (this.data.frontmatter.distance) {
-				fmContent += `<div><strong>Distance:</strong> ${this.data.frontmatter.distance} km</div>`;
+				const item = fmGrid.createDiv();
+				item.createEl('strong', { text: 'Distance: ' });
+				item.appendText(`${this.data.frontmatter.distance} km`);
 			}
-
-			fmContent += '</div>';
-			fmDiv.innerHTML = fmContent;
 		}
 
 		// Validation issues
 		if (this.data.validation.issues.length > 0) {
 			const issuesDiv = contentEl.createDiv({ cls: 'time-registrations-issues' });
-			issuesDiv.style.marginBottom = '1.5em';
-
-			const issuesHeader = issuesDiv.createEl('h3', { text: 'Issues' });
-			issuesHeader.style.marginBottom = '0.5em';
+			issuesDiv.createEl('h3', { text: 'Issues' });
 
 			const issuesList = issuesDiv.createEl('ul');
-			issuesList.style.listStyle = 'none';
-			issuesList.style.padding = '0';
 
 			this.data.validation.issues.forEach(issue => {
-				const li = issuesList.createEl('li');
-				li.style.padding = '0.5em';
-				li.style.marginBottom = '0.25em';
-				li.style.borderRadius = '4px';
-
 				const icon = issue.type === 'error' ? '❌' : issue.type === 'warning' ? '⚠️' : 'ℹ️';
-				const bgColor = issue.type === 'error'
-					? 'rgba(244, 67, 54, 0.1)'
+				const cls = issue.type === 'error'
+					? 'time-registrations-issue-error'
 					: issue.type === 'warning'
-					? 'rgba(255, 152, 0, 0.1)'
-					: 'rgba(33, 150, 243, 0.1)';
+					? 'time-registrations-issue-warning'
+					: 'time-registrations-issue-info';
 
-				li.style.backgroundColor = bgColor;
-				li.innerHTML = `${icon} ${issue.message}`;
+				issuesList.createEl('li', { cls, text: `${icon} ${issue.message}` });
 			});
 		}
 
 		// Time entries table
 		const entriesDiv = contentEl.createDiv({ cls: 'time-registrations-entries' });
-		const entriesHeader = entriesDiv.createEl('h3', { text: 'Time Entries' });
-		entriesHeader.style.marginBottom = '0.5em';
+		entriesDiv.createEl('h3', { text: 'Time entries' });
 
 		if (this.data.entries.length === 0) {
 			entriesDiv.createEl('p', {
@@ -122,73 +91,46 @@ export class DayViewModal extends Modal {
 			});
 		} else {
 			const table = entriesDiv.createEl('table');
-			table.style.width = '100%';
-			table.style.borderCollapse = 'collapse';
 
 			// Table header
 			const thead = table.createEl('thead');
 			const headerRow = thead.createEl('tr');
-			['Time', 'Project', 'Description', 'Client', 'Hours'].forEach(header => {
-				const th = headerRow.createEl('th');
-				th.textContent = header;
-				th.style.textAlign = 'left';
-				th.style.padding = '0.5em';
-				th.style.borderBottom = '2px solid var(--background-modifier-border)';
+			['Time', 'Project', 'Description', 'Client', 'Hours'].forEach(h => {
+				headerRow.createEl('th', { text: h });
 			});
 
 			// Table body
 			const tbody = table.createEl('tbody');
 			this.data.entries.forEach(entry => {
 				const row = tbody.createEl('tr');
-				row.style.borderBottom = '1px solid var(--background-modifier-border)';
 
-				// Time
-				const timeCell = row.createEl('td');
-				timeCell.textContent = entry.time;
-				timeCell.style.padding = '0.5em';
-				timeCell.style.fontWeight = 'bold';
+				row.createEl('td', { text: entry.time, cls: 'time-registrations-cell-bold' });
+				row.createEl('td', { text: entry.project || '-' });
+				row.createEl('td', { text: entry.description });
 
-				// Project
-				const projectCell = row.createEl('td');
-				projectCell.textContent = entry.project || '-';
-				projectCell.style.padding = '0.5em';
-
-				// Description
-				const descCell = row.createEl('td');
-				descCell.textContent = entry.description;
-				descCell.style.padding = '0.5em';
-
-				// Client
-				const clientCell = row.createEl('td');
-				clientCell.textContent = entry.client || '-';
-				clientCell.style.padding = '0.5em';
+				const clientCell = row.createEl('td', { text: entry.client || '-' });
 				if (!entry.client) {
-					clientCell.style.color = '#f44336';
+					clientCell.addClass('time-registrations-cell-missing');
 				}
 
-				// Hours
-				const hoursCell = row.createEl('td');
-				hoursCell.textContent = entry.hours !== undefined ? `${entry.hours}h` : '-';
-				hoursCell.style.padding = '0.5em';
-				hoursCell.style.fontWeight = 'bold';
+				const hoursCell = row.createEl('td', {
+					text: entry.hours !== undefined ? `${entry.hours}h` : '-',
+					cls: 'time-registrations-cell-bold'
+				});
 				if (entry.hours === undefined) {
-					hoursCell.style.color = '#f44336';
+					hoursCell.addClass('time-registrations-cell-missing');
 				}
 			});
 		}
 
 		// Footer with actions
 		const footer = contentEl.createDiv({ cls: 'time-registrations-footer' });
-		footer.style.marginTop = '1.5em';
-		footer.style.display = 'flex';
-		footer.style.justifyContent = 'flex-end';
-		footer.style.gap = '0.5em';
 
-		const openNoteBtn = footer.createEl('button', { text: 'Open Note' });
+		const openNoteBtn = footer.createEl('button', { text: 'Open note' });
 		openNoteBtn.addEventListener('click', () => {
 			const file = this.app.vault.getAbstractFileByPath(this.data.filePath);
 			if (file) {
-				this.app.workspace.openLinkText('', file.path, false);
+				void this.app.workspace.openLinkText('', file.path, false);
 				this.close();
 			} else {
 				new Notice('Could not open note');
@@ -197,6 +139,12 @@ export class DayViewModal extends Modal {
 
 		const closeBtn = footer.createEl('button', { text: 'Close' });
 		closeBtn.addEventListener('click', () => this.close());
+	}
+
+	private createSummaryItem(container: HTMLElement, label: string, value: string): HTMLElement {
+		const item = container.createDiv();
+		item.createDiv({ cls: 'time-registrations-summary-label', text: label });
+		return item.createDiv({ cls: 'time-registrations-summary-value', text: value });
 	}
 
 	onClose() {

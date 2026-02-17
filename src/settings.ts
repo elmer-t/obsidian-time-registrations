@@ -35,7 +35,7 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 			.setDesc('Path to your daily notes folder (leave empty for vault root)')
 			.addSearch(search => {
 				search
-					.setPlaceholder('Example: Daily notes')
+					.setPlaceholder('Example: daily notes')
 					.setValue(this.plugin.settings.dailyNotesFolder);
 
 				search.onChange(async (value) => {
@@ -96,7 +96,7 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 				}
 			});
 
-			checkbox.addEventListener('change', async () => {
+			checkbox.addEventListener('change', () => {
 				if (checkbox.checked) {
 					// Add day if not already in array
 					if (!this.plugin.settings.workingDays.includes(dayIndex)) {
@@ -107,7 +107,7 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 					// Remove day from array
 					this.plugin.settings.workingDays = this.plugin.settings.workingDays.filter(d => d !== dayIndex);
 				}
-				await this.plugin.saveSettings();
+				void this.plugin.saveSettings();
 			});
 		});
 
@@ -115,6 +115,7 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 			.setName('Date format')
 			.setDesc('Date format used in your daily note filenames')
 			.addText(text => text
+				// eslint-disable-next-line obsidianmd/ui/sentence-case
 				.setPlaceholder('YYYY-MM-DD')
 				.setValue(this.plugin.settings.dateFormat)
 				.onChange(async (value) => {
@@ -122,15 +123,13 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}));
 
-				
-				containerEl.createEl('p', {text: 'For help, visit the '}).appendChild(
-					createEl('a', {
-						text: 'GitHub page',
-						attr: {
-							href: 'https://github.com/elmer-t/obsidian-time-registrations',
-							target: '_blank'
-						}
-					})
-				);
+			const helpText = containerEl.createEl('p', {text: 'For help, visit the '});
+		helpText.createEl('a', {
+			text: 'GitHub page',
+			attr: {
+				href: 'https://github.com/elmer-t/obsidian-time-registrations',
+				target: '_blank'
 			}
-		}
+		});
+	}
+}
