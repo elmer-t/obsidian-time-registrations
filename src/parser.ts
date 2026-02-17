@@ -56,9 +56,10 @@ export class TimeParser {
 
 			// Match time entry header: ### HH:mm [[Project]] Description
 			// or ### HH:mm Description
-			const timeHeaderMatch = line.match(/^###\s+(\d{2}:\d{2})\s+(.+)/);
+			// or ### HH:mm
+			const timeHeaderMatch = line.match(/^###\s+(\d{2}:\d{2})(?:\s+(.+))?/);
 
-			if (timeHeaderMatch && timeHeaderMatch[1] && timeHeaderMatch[2]) {
+			if (timeHeaderMatch && timeHeaderMatch[1]) {
 				// Save previous entry if exists
 				if (currentEntry && currentEntry.time) {
 					entries.push(this.finalizeEntry(currentEntry));
@@ -66,7 +67,7 @@ export class TimeParser {
 
 				// Start new entry
 				const time = timeHeaderMatch[1];
-				const rest = timeHeaderMatch[2];
+				const rest = timeHeaderMatch[2] || '';
 
 				// Try to extract project link
 				const projectMatch = rest.match(/\[\[([^\]]+)\]\]\s*(.*)/);
