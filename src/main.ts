@@ -19,13 +19,13 @@ export default class TimeRegistrations extends Plugin {
 		this.dataManager = new TimeDataManager(this.app, this.settings);
 
 		// Add ribbon icon to open week view
-		this.addRibbonIcon('clock', 'Time Registrations - Week Overview', () => {
+		this.addRibbonIcon('clock', 'Time registrations - week overview', () => {
 			new WeekViewModal(this.app, this.dataManager, new Date()).open();
 		});
 
 		// Add status bar item
 		this.statusBarItem = this.addStatusBarItem();
-		this.updateStatusBar();
+		void this.updateStatusBar();
 
 		// Command: Show today's overview
 		this.addCommand({
@@ -53,7 +53,7 @@ export default class TimeRegistrations extends Plugin {
 					const date = TimeParser.extractDateFromFilename(activeFile);
 					if (date) {
 						if (!checking) {
-							this.dataManager.getDailyData(date).then(data => {
+							void this.dataManager.getDailyData(date).then(data => {
 								if (data) {
 									new DayViewModal(this.app, data).open();
 								} else {
@@ -97,7 +97,7 @@ export default class TimeRegistrations extends Plugin {
 					const date = TimeParser.extractDateFromFilename(activeFile);
 					if (date) {
 						if (!checking) {
-							this.validateNote(date);
+							void this.validateNote(date);
 						}
 						return true;
 					}
@@ -111,13 +111,13 @@ export default class TimeRegistrations extends Plugin {
 
 		// Update status bar periodically
 		this.registerInterval(
-			window.setInterval(() => this.updateStatusBar(), 60000) // Every minute
+			window.setInterval(() => { void this.updateStatusBar(); }, 60000) // Every minute
 		);
 
 		// Update status bar when file is opened
 		this.registerEvent(
 			this.app.workspace.on('active-leaf-change', () => {
-				this.updateStatusBar();
+				void this.updateStatusBar();
 			})
 		);
 	}

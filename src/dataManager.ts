@@ -50,8 +50,10 @@ export class TimeDataManager {
 		let folderObj: TFolder | null = null;
 
 		if (folder) {
-			folderObj = this.app.vault.getAbstractFileByPath(folder) as TFolder;
-			if (!folderObj) {
+			const abstractFile = this.app.vault.getAbstractFileByPath(folder);
+			if (abstractFile instanceof TFolder) {
+				folderObj = abstractFile;
+			} else {
 				console.warn(`Folder not found: ${folder}`);
 				return [];
 			}

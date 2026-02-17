@@ -35,7 +35,7 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 			.setDesc('Path to your daily notes folder (leave empty for vault root)')
 			.addSearch(search => {
 				search
-					.setPlaceholder('Example: Daily Notes')
+					.setPlaceholder('Example: Daily notes')
 					.setValue(this.plugin.settings.dailyNotesFolder);
 
 				search.onChange(async (value) => {
