@@ -1,4 +1,4 @@
-import { App, Modal, Notice } from 'obsidian';
+import { App, Modal } from 'obsidian';
 import { DailyTimeData, ValidationStatus } from '../types';
 import { TimeValidator } from '../validator';
 import { TimeDataManager } from '../dataManager';

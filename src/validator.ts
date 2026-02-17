@@ -1,4 +1,4 @@
-import { TimeEntry, DailyTimeData, ValidationResult, ValidationStatus, ValidationIssue, DailyFrontmatter } from './types';
+import { TimeEntry, ValidationResult, ValidationStatus, ValidationIssue, DailyFrontmatter } from './types';
 import { TimeParser } from './parser';
 
 export class TimeValidator {

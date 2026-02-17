@@ -158,7 +158,6 @@ export default class TimeRegistrations extends Plugin {
 			const status = data.validation.status;
 			const icon = TimeValidator.getStatusIcon(status);
 			const hours = data.totalHours.toFixed(2);
-			const expected = data.expectedHours.toFixed(2);
 
 			this.statusBarItem.setText(`${icon} ${hours}h`);
 			this.statusBarItem.title = `Time registrations for ${date}: ${TimeValidator.getStatusText(status)}`;

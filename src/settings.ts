@@ -27,11 +27,7 @@ export class TimeRegistrationsSettingTab extends PluginSettingTab {
 
 	display(): void {
 		const {containerEl} = this;
-
 		containerEl.empty();
-
-		containerEl.createEl('h2', {text: 'Time Registrations Settings'});
-
 
 		// Daily notes folder with search component
 		new Setting(containerEl)
