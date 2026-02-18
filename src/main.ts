@@ -6,6 +6,7 @@ import { DayViewModal } from './views/DayView';
 import { WeekViewModal } from './views/WeekView';
 import { MonthViewModal } from './views/MonthView';
 import { TimeValidator } from './validator';
+import { Utils } from './utils';
 
 export default class TimeRegistrations extends Plugin {
 	settings: TimeRegistrationsSettings;
@@ -157,9 +158,9 @@ export default class TimeRegistrations extends Plugin {
 		if (data) {
 			const status = data.validation.status;
 			const icon = TimeValidator.getStatusIcon(status);
-			const hours = data.totalHours.toFixed(2);
+			const hours = Utils.formatTime(data.totalHours);
 
-			this.statusBarItem.setText(`${icon} ${hours}h`);
+			this.statusBarItem.setText(`${icon} ${hours}`);
 			this.statusBarItem.title = `Time registrations for ${date}: ${TimeValidator.getStatusText(status)}`;
 		} else {
 			this.statusBarItem.setText('⏱️ 0h');
@@ -180,7 +181,7 @@ export default class TimeRegistrations extends Plugin {
 		const icon = TimeValidator.getStatusIcon(validation.status);
 
 		let message = `${icon} ${status}\n\n`;
-		message += `Total: ${data.totalHours.toFixed(2)}h / ${data.expectedHours}h\n`;
+		message += `Total: ${Utils.formatTime(data.totalHours)} / ${Utils.formatTime(data.expectedHours)}\n`;
 
 		if (validation.issues.length > 0) {
 			message += `\nIssues (${validation.issues.length}):\n`;

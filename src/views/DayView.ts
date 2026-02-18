@@ -1,6 +1,7 @@
 import { App, Modal, Notice } from 'obsidian';
 import { DailyTimeData } from '../types';
 import { TimeValidator } from '../validator';
+import { Utils } from '../utils';
 
 export class DayViewModal extends Modal {
 	constructor(
@@ -32,10 +33,10 @@ export class DayViewModal extends Modal {
 		const summaryDiv = contentEl.createDiv({ cls: 'time-registrations-summary' });
 		const summaryGrid = summaryDiv.createDiv({ cls: 'time-registrations-summary-grid' });
 
-		this.createSummaryItem(summaryGrid, 'Total hours', `${this.data.totalHours.toFixed(2)}h`);
-		this.createSummaryItem(summaryGrid, 'Expected hours', `${this.data.expectedHours.toFixed(2)}h`);
+		this.createSummaryItem(summaryGrid, 'Total hours', Utils.formatTime(this.data.totalHours));
+		this.createSummaryItem(summaryGrid, 'Expected hours', Utils.formatTime(this.data.expectedHours));
 
-		const diffText = `${this.data.validation.missingHours > 0 ? '-' : '+'}${Math.abs(this.data.validation.missingHours).toFixed(2)}h`;
+		const diffText = `${this.data.validation.missingHours > 0 ? '-' : '+'}${Utils.formatTime(Math.abs(this.data.validation.missingHours))}`;
 		const diffValue = this.createSummaryItem(summaryGrid, 'Difference', diffText);
 		diffValue.addClass(this.data.validation.missingHours > 0 ? 'time-registrations-value-negative' : 'time-registrations-value-positive');
 
@@ -114,7 +115,7 @@ export class DayViewModal extends Modal {
 				}
 
 				const hoursCell = row.createEl('td', {
-					text: entry.hours !== undefined ? `${entry.hours}h` : '-',
+					text: entry.hours !== undefined ? Utils.formatTime(entry.hours) : '-',
 					cls: 'time-registrations-cell-bold'
 				});
 				if (entry.hours === undefined) {

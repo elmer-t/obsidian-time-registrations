@@ -1,5 +1,6 @@
 import { TimeEntry, ValidationResult, ValidationStatus, ValidationIssue, DailyFrontmatter } from './types';
 import { TimeParser } from './parser';
+import { Utils } from './utils';
 
 export class TimeValidator {
 	/**
@@ -86,7 +87,7 @@ export class TimeValidator {
 			// Missing hours - add info message
 			issues.push({
 				type: 'info',
-				message: `Missing ${missingHours.toFixed(2)} hours (expected ${expectedFromFrontmatter}h, got ${totalHours}h)`
+				message: `Missing ${Utils.formatTime(missingHours)} hours (expected ${Utils.formatTime(expectedFromFrontmatter)}, got ${Utils.formatTime(totalHours)})`
 			});
 		}
 		// Note: Excess hours are never a problem and don't affect status

@@ -3,6 +3,7 @@ import { DailyTimeData, ValidationStatus } from '../types';
 import { TimeValidator } from '../validator';
 import { TimeDataManager } from '../dataManager';
 import { DayViewModal } from './DayView';
+import { Utils } from '../utils';
 
 export class WeekViewModal extends Modal {
 	private weekData: DailyTimeData[] = [];
@@ -61,16 +62,16 @@ export class WeekViewModal extends Modal {
 			<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; text-align: center;">
 				<div>
 					<div style="color: var(--text-muted); font-size: 0.9em;">Total Hours</div>
-					<div style="font-size: 1.8em; font-weight: bold;">${totalHours.toFixed(2)}h</div>
+					<div style="font-size: 1.8em; font-weight: bold;">${Utils.formatTime(totalHours)}</div>
 				</div>
 				<div>
 					<div style="color: var(--text-muted); font-size: 0.9em;">Expected Hours</div>
-					<div style="font-size: 1.8em; font-weight: bold;">${expectedHours.toFixed(2)}h</div>
+					<div style="font-size: 1.8em; font-weight: bold;">${Utils.formatTime(expectedHours)}</div>
 				</div>
 				<div>
 					<div style="color: var(--text-muted); font-size: 0.9em;">Difference</div>
 					<div style="font-size: 1.8em; font-weight: bold; color: ${difference > 0 ? '#f44336' : '#4caf50'}">
-						${difference > 0 ? '-' : '+'}${Math.abs(difference).toFixed(2)}h
+						${difference > 0 ? '-' : '+'}${Utils.formatTime(Math.abs(difference))}
 					</div>
 				</div>
 			</div>
@@ -142,7 +143,7 @@ export class WeekViewModal extends Modal {
 				hoursDiv.style.textAlign = 'center';
 				hoursDiv.style.fontSize = '1.2em';
 				hoursDiv.style.fontWeight = 'bold';
-				hoursDiv.innerHTML = `${dayData.totalHours.toFixed(2)}h <span style="color: var(--text-muted); font-weight: normal; font-size: 0.8em;">/ ${dayData.expectedHours}h</span>`;
+				hoursDiv.innerHTML = `${Utils.formatTime(dayData.totalHours)} <span style="color: var(--text-muted); font-weight: normal; font-size: 0.8em;">/ ${Utils.formatTime(dayData.expectedHours)}</span>`;
 
 				// Click to open day view
 				dayCard.addEventListener('click', () => {
